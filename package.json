@@ -1,0 +1,9 @@
+{
+    "name" : "grunt-contrib-namespacer",
+    "version" : "0.1.0",
+    "description" : "Builds JavaScript namespaces based of folder structure",
+    
+    "devDependencies"  : {
+        "grunt": "~0.4.2"
+    }
+}
