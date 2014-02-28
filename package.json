@@ -1,8 +1,11 @@
 {
-    "name" : "grunt-contrib-namespacer",
+    "name" : "grunt-namespacer",
     "version" : "0.1.0",
-    "description" : "Builds JavaScript namespaces based of folder structure",
-    
+    "description" : "Builds javascript namespaces based on folder structure",
+    "repository" : {
+        "type" : "git",
+        "url" : "https://github.com/jasonsavage/grunt-namespacer.git"
+    },
     "devDependencies"  : {
         "grunt": "~0.4.2"
     }

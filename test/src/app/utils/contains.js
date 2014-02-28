@@ -9,3 +9,9 @@ function contains(value, search)
 {
     return value.indexOf(search) !== -1;
 }
+
+function _hideTest1() { }
+
+var _hideTest2 = function() { };
+
+var showTest = function() { };
