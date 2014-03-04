@@ -35,20 +35,20 @@ grunt.initConfig({
 ## Example
 
 **folder structure**:
-- app
--- controls
---- checkboxes.js
--- models
----- vo
------ person.js
---- cartItem.js
---- cart.js
--- utils
---- contains.js
---- empty.js
---- firstToUpper.js
---- substitute.js
--- init.js
+* app/
+	* controls/
+		* checkboxes.js
+	* models/
+		* vo/
+			* person.js
+		* cartItem.js
+		* cart.js
+	* utils/
+		* contains.js
+		* empty.js
+		* firstToUpper.js
+		* substitute.js
+	* init.js
 
 ```js
 
