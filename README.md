@@ -50,6 +50,8 @@ grunt.initConfig({
 		* substitute.js
 	* init.js
 
+**after task**: you should have a file named 'app.js' (base folder name) and be able to access classes/methods like this:
+
 ```js
 
 var car = new app.models.cart();
