@@ -1,41 +1,22 @@
 
 
-/**
- * Used on /news-events page to add functionality to the filters custom checkboxes 
- */
+var event_select_change = 'selectChange';
 
-
-var EVT_SELECT_CHANGE = 'selectChange';
-
-function Checkbox( $element )
+function Checkbox( $elements )
 {
-    var selected = $element.hasClass('selected');
-    
-    $element.on('click', function()
-    {
-        selected = !selected;
-        selected ? $(this).addClass('selected') : $(this).removeClass('selected');
-        
-        //trigger change
-        $(this).trigger(EVT_SELECT_CHANGE);
-    });
+    this.result = function() { return "Checkbox"; };
 }
 
 function CheckboxGroup( $elements )
 {
-    $elements.on(EVT_SELECT_CHANGE, function()
+    this.result = function() { return "CheckboxGroup"; };
+    this.update = function()
     {
-        var filters = [];
-        $($elements).filter('.selected').each(function() {
-            filters.push( $(this).data("value") );
-        });
-
-        //get url and remove any query vars
-        var url = window.location.href.replace(/\?.*$/, '');
-        
-        if( filters.length )
-            window.location = url + "?filters=" + filters.join(',');
-        else
-            window.location = url;
-    });
+        return _update();
+    };
 }
+
+var _update = function( $context )
+{
+    return "_update (hidden)";
+};

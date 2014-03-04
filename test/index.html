@@ -1,0 +1,24 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>grunt-namespacer build tests</title>
+  <link rel="stylesheet" href="vendor/mocha.css" />
+</head>
+<body onload="init()">
+  <div id="mocha">&nbsp;</div>
+  
+  <script src="build/app.js"></script>
+  
+  <script src="vendor/expect.js"></script>
+  <script src="vendor/assert.js"></script>
+  <script src="vendor/mocha.js"></script>
+  
+  <script>mocha.setup({ ui: 'bdd', timeout: 200 }); mocha.globals(['setTimeout']);</script>
+  <script src="namespacer-test.js"></script>
+  
+  <script>
+    mocha.globals(['setTimeout']); 
+	mocha.run();
+  </script>
+</body>
+</html>

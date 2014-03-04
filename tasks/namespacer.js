@@ -5,7 +5,7 @@
 * Copyright (c) 2014 jasonsavage
 * Licensed under the MIT license.
 * 
-* help taken from grunt-wrap by Christopher Rogers and grunt-autowrap by Vontio
+* based on grunt-autowrap by Vontio with help taken from grunt-wrap by Christopher Rogers
 */
 
 'use strict';

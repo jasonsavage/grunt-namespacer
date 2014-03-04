@@ -1,5 +1,5 @@
 
 function init()
 {
-    console.log("init()");
+    return "init";
 }

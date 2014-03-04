@@ -6,15 +6,13 @@ function Cart()
     
     this.count = function()
     {
-        return this.item.length;
+        return this.items.length;
     };
     
     this.addItem = function( item )
     {
         this.item.push(item);
     };
-    
-    
-    
-    console.log("Cart()");
 }
+
+Cart.prototype.result = function() { return "Cart"; };
