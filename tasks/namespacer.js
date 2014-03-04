@@ -76,6 +76,7 @@ module.exports = function(grunt)
             grunt.file.write(dest + '/' + base + '.js', content );
             
             //remove tmp folder
+            grunt.file.delete(dest + '/tmp');
             
             //end
         });
