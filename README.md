@@ -4,7 +4,6 @@ grunt-namespacer
 Concats and scope wraps javascript files into namespaces based on folder structure
 
 ## Getting Started
-Install this grunt plugin next to your project's [grunt.js gruntfile][getting_started] with: ``npm install grunt-wrap``
 
 Then add this line to your project's ``grunt.js`` gruntfile:
 
@@ -50,7 +49,8 @@ grunt.initConfig({
 		* substitute.js
 	* init.js
 
-**after task**: you should have a file named 'app.js' (base folder name) and be able to access classes/methods like this:
+**after task**: you should have a file named 'app.js' (base folder name) 
+and be able to access classes/methods like this:
 
 ```js
 
