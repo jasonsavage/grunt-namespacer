@@ -99,11 +99,11 @@ module.exports = function(grunt)
     function addNamespaceExports(content)
     {
         var matches = content.match(/function\s+[^_]\w+\(|var\s+[^_]\w+\s+=\s+function\(/g),
-            exports = matches.map(function(str)
+            exports = ( matches !== null ) ? matches.map(function(str)
             {
                 return str.replace(/function\s+(\w+)\(/, 'ns.$1 = $1;')
                           .replace(/var\s+(\w+)\s+=\s+function\(/, 'ns.$1 = $1;');
-            });
+            }) : [];
         
         return content + '\n\n' + exports.join('\n');
     }

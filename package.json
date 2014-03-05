@@ -1,16 +1,12 @@
 {
     "name" : "grunt-namespacer",
     "version" : "0.1.0",
-    "description" : "Builds javascript namespaces based on folder structure",
+    "description" : "Concats and scope wraps javascript files into namespaces based on folder structure",
     "repository" : {
         "type" : "git",
         "url" : "https://github.com/jasonsavage/grunt-namespacer.git"
     },
     "devDependencies"  : {
         "grunt": "~0.4.2"
-    },
-    "main": "Gruntfile.js",
-    "engines": {
-        "node": ">= 0.8.0"
-    },
+    }
 }
