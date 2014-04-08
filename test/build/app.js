@@ -121,7 +121,7 @@ function empty(obj)
     if(typeof obj === 'undefined' || obj === null || obj === '' || obj === false) return true; //empty
     if(typeof obj === 'number' && obj > 0) return false;
     if(typeof obj === 'boolean' && obj) return false;
-    if(typeof obj === 'object') for(item in obj) return false;
+    if(typeof obj === 'object') for(var item in obj) return false;
     
     return true;
 }
@@ -148,7 +148,7 @@ function substitute(msg/*, ...args*/)
     args.shift();
     
     var i = args.length;
-    while(i--) msg = msg.replace("/\{"+i+"\}/g", args[i]);
+    while(i--) msg = msg.replace("/{"+i+"}/g", args[i]);
     return msg;
 }
 

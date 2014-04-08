@@ -11,6 +11,6 @@ function substitute(msg/*, ...args*/)
     args.shift();
     
     var i = args.length;
-    while(i--) msg = msg.replace("/\{"+i+"\}/g", args[i]);
+    while(i--) msg = msg.replace("/{"+i+"}/g", args[i]);
     return msg;
 }
