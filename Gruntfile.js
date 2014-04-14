@@ -13,9 +13,11 @@ module.exports = function(grunt)
         
         
         namespacer : {
+            
             test : {
-                src     : 'test/src/app/',
-                dest    : 'test/build/'
+                name    : "app",
+                src     : 'test/src/app',
+                dest    : 'test/build/core.js'
             }
         },
         

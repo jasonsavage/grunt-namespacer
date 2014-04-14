@@ -1,6 +1,6 @@
 {
     "name" : "grunt-namespacer",
-    "version" : "0.1.0",
+    "version" : "0.1.2",
     "description" : "Concats and scope wraps javascript files into namespaces based on folder structure",
     "repository" : {
         "type" : "git",

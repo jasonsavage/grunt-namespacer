@@ -25,29 +25,45 @@ module.exports = function(grunt)
         
         grunt.verbose.writeflags(options, 'Options');
         
-        this.files.forEach(function (target) 
+        this.files.forEach(function (config) 
         {
             //task listed in the config for this task
-            
-            //target.src
-            //target.dest
-            
+
             //remove trailing /'s from src and dest
-            var src     = target.src.toString().replace(/(\/$)/,''),
-                dest    = target.dest.toString().replace(/(\/$)/,''),
-            
+            var src     = config.src.toString().replace(/(\/$)/,''),
+                dest    = config.dest.toString().replace(/(\/$)/,''),
+                
             //get the starting namespace based on dir name
-                base = src.substring(src.lastIndexOf('/')+1),
+                baseDir = src.substring(src.lastIndexOf('/')+1),
             
+            //get the starting namespace
+                base = ('name' in config) ? config.name : baseDir,
+            
+            //variable for final file name
+                outputFile = null,
+                
             //tracks all namespaces created
                 namespaces = [];
             
-            var directories = grunt.file.expand(src + "/**/");
-            
-            directories.forEach(function(path)
+            //get final file name from dest if it is a file and not a directory else use base + ".js"
+            if( dest.indexOf('.js') !== -1 )
             {
-                var ns = path.substring(path.indexOf(base), path.lastIndexOf('/')).replace(/\//g, '.'),
+                var i = dest.lastIndexOf('/');
+                outputFile = dest.substring(i+1);
+                dest = dest.substring(0, i);
+            }
+            else
+            {
+                outputFile = base + ".js";
+            }
+            
+            //loop through each file and build out namespace
+            grunt.file.expand(src + "/**/").forEach(function(path)
+            {
+                var ns = path.substring(path.indexOf(baseDir), path.lastIndexOf('/')).replace(/\//g, '.'),
                     content = concatFilesInDir(path, "\n");
+                
+                ns = ns.replace(baseDir, base);
                 
                 //collect namespace
                 namespaces.push(ns);
@@ -73,7 +89,7 @@ module.exports = function(grunt)
             content = '(function() {\n' + content + '\n}());';
             
             //save
-            grunt.file.write(dest + '/' + base + '.js', content );
+            grunt.file.write(dest + '/' + outputFile, content );
             
             //remove tmp folder
             grunt.file.delete(dest + '/tmp');
@@ -169,9 +185,5 @@ module.exports = function(grunt)
         
         return ret.join("\n");
     }
-    
-    
-    
-    
     
 };
