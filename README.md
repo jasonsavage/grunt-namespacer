@@ -1,4 +1,4 @@
-# grunt-namespacer v0.1.2
+# grunt-namespacer v0.1.5
 
 > Concats and scope wraps JavaScript files into namespaces based on your projects folder structure.
 
