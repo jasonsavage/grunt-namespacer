@@ -88,7 +88,7 @@ If a file requires another file before it can run you can use the keyword "@requ
 
 function Product() { } 
 var p = Product.prototype = new app.model.CartItem();
-Product.prototype.getName() {
+Product.prototype.getName = function() {
    return 'apple';
 }
 ```
