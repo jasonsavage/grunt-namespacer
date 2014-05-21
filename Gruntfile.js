@@ -40,5 +40,6 @@ module.exports = function(grunt)
 
   // Default task(s).
   grunt.registerTask('default', ['namespacer', 'jshint', 'mocha_phantomjs']);
+  grunt.registerTask('dev', ['namespacer']);
 
 };

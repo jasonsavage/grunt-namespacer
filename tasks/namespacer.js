@@ -33,60 +33,71 @@ module.exports = function(grunt)
             var src     = config.src.toString().replace(/(\/$)/,''),
                 dest    = config.dest.toString().replace(/(\/$)/,''),
                 
-            //get the starting namespace based on dir name
+            //get the starting namespace based on src
                 baseDir = src.substring(src.lastIndexOf('/')+1),
             
             //get the starting namespace
                 base = ('name' in config) ? config.name : baseDir,
             
             //variable for final file name
-                outputFile = null,
+                outputFile = base + ".js",
                 
-            //tracks all namespaces created
-                namespaces = [];
+            //tracks all root namespaces created
+                namespaces = [],
             
-            //get final file name from dest if it is a file and not a directory else use base + ".js"
+            //map file namespaces to file paths
+                namespaceMap = {};
+            
+            //get final file name from dest if it not a directory
             if( dest.indexOf('.js') !== -1 )
             {
                 var i = dest.lastIndexOf('/');
                 outputFile = dest.substring(i+1);
                 dest = dest.substring(0, i);
             }
-            else
-            {
-                outputFile = base + ".js";
-            }
             
             //loop through each file and build out namespace
-            grunt.file.expand(src + "/**/").forEach(function(path)
+            grunt.file.expand(src + "/**/*.js").forEach(function(path)
             {
-                var ns = path.substring(path.indexOf(baseDir), path.lastIndexOf('/')).replace(/\//g, '.'),
-                    content = concatFilesInDir(path, "\n");
-                
-                ns = ns.replace(baseDir, base);
-                
-                //collect namespace
-                namespaces.push(ns);
+                var ns      = path.substring(path.indexOf(baseDir), path.lastIndexOf('.js')).replace(/\//g, '.').replace(baseDir, base),
+                    root    = ns.substring(0, ns.lastIndexOf('.'));
+                    content = grunt.file.read(path);
                 
                 //proccess content
                 content = addNamespaceExports(content);
-                content = addWrapper(ns, content);
-                
-                //generate tmp path
+                content = addWrapper(root, content);
+
+                //write each file out to tmp directory
                 var path = dest + '/tmp/' + ns + '.js';
-                
-                //flush the contents to {tmp} destination
                 grunt.file.write(path, content);
+                
+                //add namespace root to array
+                if(namespaces.indexOf(root) === -1 )
+                    namespaces.push(root);
+                
+                //add to source mapping
+                namespaceMap[ns] = path;
+
             });
             
-            //write namespaces file
-            grunt.file.write(dest + '/tmp/00_ns.js', getNamespaceJS(namespaces) );
+            //sort files so that any @require namespaces listed in a file comes before that file
+            var sorted = sortNamespaces(namespaceMap);
             
-            //concat all files together into {base}.js
-            var content = concatFilesInDir(dest + '/tmp/', "\n\n");
+            //sort root namespace array
+            namespaces.sort();
+ 
+            //write namespaces file to tmp directory
+            grunt.file.write(dest + '/tmp/00_ns.js', getNamespaceJS( namespaces ) );
             
+            //add ns header to map
+            namespaceMap['app.ns'] = dest + '/tmp/00_ns.js';
+            sorted.unshift("app.ns");
+            
+            //concat all files together based on sorted array
+            var content = concatFilesInOrder(sorted, namespaceMap, "\n\r");
+
             //add wrapper
-            content = '(function() {\n' + content + '\n}());';
+            content = addWrapper('window', content);
             
             //save
             grunt.file.write(dest + '/' + outputFile, content );
@@ -97,6 +108,50 @@ module.exports = function(grunt)
             //end
         });
     });
+    
+
+    function sortNamespaces(namespaceMap)
+    {
+        var sorted = [];
+        for(var ns in namespaceMap)
+        {
+            var path = namespaceMap[ns],
+                requires = getRequires(path);
+                
+            requires.forEach(function(rns)
+            {
+                var index = sorted.indexOf(rns);
+                if( index !== -1)
+                    sorted.splice(index, 1);
+                    
+                sorted.unshift(rns);
+            });
+            
+            if( sorted.indexOf(ns) === -1 )
+                sorted.push(ns);
+        }
+
+        return sorted;
+    }
+    
+    function getRequires(path)
+    {
+        var content = grunt.file.read(path),
+            matches = content.match(/@require\s([^;]+);/g) || [],
+            requires = matches.map(function(match)
+            {
+                return match.replace(/@require\s([^;]+);/g, '$1');
+            });
+        return requires;
+    }
+    
+    function concatFilesInOrder(sorted, filePathMap, separator)
+    {
+        return sorted.map(function(key) {
+            var path = filePathMap[key];
+            return grunt.file.read(path);
+        }).join(grunt.util.normalizelf(separator));
+    }
     
     function addWrapper(namespace, content)
     {
@@ -124,66 +179,10 @@ module.exports = function(grunt)
         return content + '\n\n' + exports.join('\n');
     }
     
-    function concatFilesInDir(dir, separator)
-    {
-        var files = grunt.file.expand(dir + "/*.js");
-        return files.map(function (filePath) {
-            return grunt.file.read(filePath);
-        }).join(grunt.util.normalizelf(separator));
-    }
-    
     function getNamespaceJS(namespaces)
     {
-        return namespaces.map(function (ns) {
-            return 'window.' + ns + ' = {};';
-        }).join('\n');
+        return namespaces.map(function(ns) {
+            return 'ns.' + ns + ' = {};';
+        }).join('\r\n');
     }
-    
-    function flush_namespace_to_tmp(dest, ns, content)
-    {
-        //check if file exists for this subdir
-        var path = dest + '/tmp/' + ns + '.js';
-        
-        //TODO: get all functions and append to namespace
-        // function test() {}  adds app.test = test; to end
-        var methods = content.match(/function\s+(\w+)\(/g);
-        console.log(methods);
-        
-        //add wrapper
-        content = '(function(ns) {\n' + content + '\n}(' + ns + '));';
-        
-        //flush the contents to {tmp} destination
-        grunt.file.write(path, content );
-        
-        return ns;
-    }
-    
-    
-    /**
-     * gets the namespace for this filepath starting from base
-     * @param {string} filepath
-     * @param {string} filepath
-     */
-    function get_namespace_js(base, path, dest)
-    {
-        var ret = ["window." + base + " = {};"],
-            path = path.replace(/(^\/|\/$)/,'');
-        
-        if( path.indexOf(base) !== -1 )
-        {
-            path = path.substring( path.indexOf(base) );
-            
-            var parts = path.split("/"),
-                ns = base;
-
-            parts.forEach(function (node) 
-            {
-                ns += "." + node;
-                ret.push(ns + " = {};");
-            });
-        }
-        
-        return ret.join("\n");
-    }
-    
 };

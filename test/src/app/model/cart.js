@@ -1,5 +1,7 @@
 
 
+//@require app.model.cartItem;
+
 function Cart()
 {
     this.items = [];
@@ -14,5 +16,7 @@ function Cart()
         this.item.push(item);
     };
 }
+
+var temp = Cart.prototype = new app.model.CartItem();
 
 Cart.prototype.result = function() { return "Cart"; };

@@ -1,12 +1,70 @@
-(function() {
-window.app = {};
-window.app.controls = {};
-window.app.model = {};
-window.app.model.vo = {};
-window.app.utils = {};
-
 (function(ns) {
+ns.app = {};
+ns.app.controls = {};
+ns.app.model = {};
+ns.app.model.vo = {};
+ns.app.utils = {};
+(function(ns) {
 
+
+
+function CartItem(name, price)
+{
+    this.name = name;
+    this.price = price || 0;
+    
+    this.result = function() { return "CartItem"; };
+}
+
+ns.CartItem = CartItem;
+}(app.model));
+(function(ns) {
+
+var Person = function()
+{
+    this.result = function() { return "Person"; };
+};
+
+function Jason()
+{
+    this.result = function() { return "Jason"; };
+}
+Jason.prototype = new Person();
+
+ns.Person = Person;
+ns.Jason = Jason;
+}(app.model.vo));
+(function(ns) {
+
+
+//@require app.model.cartItem;
+
+function Cart()
+{
+    this.items = [];
+    
+    this.count = function()
+    {
+        return this.items.length;
+    };
+    
+    this.addItem = function( item )
+    {
+        this.item.push(item);
+    };
+}
+
+var temp = Cart.prototype = new app.model.CartItem();
+
+Cart.prototype.result = function() { return "Cart"; };
+
+ns.Cart = Cart;
+}(app.model));
+(function(ns) {
+
+
+//@require app.model.cart;
+//@require app.model.vo.person;
 
 var event_select_change = 'selectChange';
 
@@ -32,8 +90,7 @@ var _update = function( $context )
 ns.Checkbox = Checkbox;
 ns.CheckboxGroup = CheckboxGroup;
 }(app.controls));
-
-(function(ns) {
+(function(ns) {
 
 function init()
 {
@@ -42,57 +99,7 @@ function init()
 
 ns.init = init;
 }(app));
-
-(function(ns) {
-
-
-function Cart()
-{
-    this.items = [];
-    
-    this.count = function()
-    {
-        return this.items.length;
-    };
-    
-    this.addItem = function( item )
-    {
-        this.item.push(item);
-    };
-}
-
-Cart.prototype.result = function() { return "Cart"; };
-
-function CartItem(name, price)
-{
-    this.name = name;
-    this.price = price || 0;
-    
-    this.result = function() { return "CartItem"; };
-}
-
-ns.Cart = Cart;
-ns.CartItem = CartItem;
-}(app.model));
-
-(function(ns) {
-
-var Person = function()
-{
-    this.result = function() { return "Person"; };
-};
-
-function Jason()
-{
-    this.result = function() { return "Jason"; };
-}
-Jason.prototype = new Person();
-
-ns.Person = Person;
-ns.Jason = Jason;
-}(app.model.vo));
-
-(function(ns) {
+(function(ns) {
 
 
 /**
@@ -111,6 +118,11 @@ var _hideTest2 = function() { };
 
 var showTest = function() { };
 
+ns.contains = contains;
+ns.showTest = showTest;
+}(app.utils));
+(function(ns) {
+
 
 /**
  * checks if the supplied [object] is empty. 
@@ -126,6 +138,10 @@ function empty(obj)
     return true;
 }
 
+ns.empty = empty;
+}(app.utils));
+(function(ns) {
+
 
 /**
  * sets the first character of each word to uppercase 
@@ -135,6 +151,10 @@ function firstToUpper(value)
 {
     return value.charAt(0).toUpperCase() + value.substr(1);
 }
+
+ns.firstToUpper = firstToUpper;
+}(app.utils));
+(function(ns) {
 
 
 /**
@@ -152,10 +172,6 @@ function substitute(msg/*, ...args*/)
     return msg;
 }
 
-ns.contains = contains;
-ns.showTest = showTest;
-ns.empty = empty;
-ns.firstToUpper = firstToUpper;
 ns.substitute = substitute;
 }(app.utils));
-}());
+}(window));

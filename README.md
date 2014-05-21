@@ -82,29 +82,15 @@ function _updateDisplay() { }
 var _getUserInfo = function() { }
 ```
 
-Any functions/variables that are in any of the files in the same directory are considered in the same namespace, so be careful not to overwrite a variable value or function by accident.
-
+If a file requires another file before it can run you can use the keyword "@require". This will let namespacer know the order for combining files.
 ```javascript
-//app/helpers/cartHelper.js
-var appId = 4577694;
-var storeId = 79;
-function getCart(id) { }
-function getUsers(id, store) { }
- 
-//app/helpers/facebook.js
-var appId = '49865328751';
-function getUserFriendsList(id) { }
-function getUsers(id) { }
- 
-//since these 2 files are in the same directory, the value of variable 'appId' will
-//end up being whichever file gets written last. (probably '49865328751' from facebook.js)
-//same goes for the 'getUsers' method.
- 
-//on the other hand 'facebook.js' can access the 'getCart' method just by name and not namespace
-//app/helpers/facebook.js
-var cart = getCart( facebookId );
-//instead of
-var cart = app.helpers.getCart( facebookId );
+//@require app.model.cartItem;
+
+function Product() { } 
+var p = Product.prototype = new app.model.CartItem();
+Product.prototype.getName() {
+   return 'apple';
+}
 ```
 
 ## License

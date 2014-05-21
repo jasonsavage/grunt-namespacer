@@ -1,5 +1,8 @@
 
 
+//@require app.model.cart;
+//@require app.model.vo.person;
+
 var event_select_change = 'selectChange';
 
 function Checkbox( $elements )
